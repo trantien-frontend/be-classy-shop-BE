@@ -44,7 +44,7 @@ public class Product {
 	private String productImage;
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
-			CascadeType.MERGE }, fetch = FetchType.LAZY)
+			CascadeType.MERGE }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id")
 	private Category category;
 

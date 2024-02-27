@@ -44,16 +44,10 @@ public class ProductApis {
 		return product;
 	}
 
-	@GetMapping(path = "/products/category")
-	public List<Product> getProductsByProductTypeName() {
-		return this.productService.getProductsByProductTypeName();
+	@GetMapping(path = "/products/category/{productTypeName}")
+	public List<Product> getProductsByProductTypeName(@PathVariable(name = "productTypeName") String productTypeName) {
+		return this.productService.getProductsByProductTypeName(productTypeName);
 	}
-
-//	@GetMapping(path = "/products/category/{categoryName}")
-//	public List<Product> getProductsByProductTypeName(
-//			@PathVariable(name = "categoryName") String theCategoryName) {
-//		return this.productService.getProductByCategoryName(theCategoryName); 
-//	}
 
 	@PostMapping(path = "/products")
 	public Product addProduct(@RequestBody Product theProduct) {

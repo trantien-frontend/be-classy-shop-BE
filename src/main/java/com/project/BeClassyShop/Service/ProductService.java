@@ -30,8 +30,8 @@ public class ProductService {
 		return product.get();
 	}
 
-	public List<Product> getProductsByProductTypeName() {
-		return productRepository.findListProductByProductTypeName();
+	public List<Product> getProductsByProductTypeName(String theProductTypeName) {
+		return productRepository.findListProductByProductTypeName(theProductTypeName);
 	}
 
 	public List<Product> getProductByCategoryName(String theCategoryName) {
