@@ -9,18 +9,11 @@ import org.springframework.data.repository.query.Param;
 import com.project.BeClassyShop.Entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-//	@Query("Select p from Product as p" + " where p.category.id = :categoryId")
-//	List<Product> findListProductByProductId(@Param("categoryId") Integer categoryId);
-	@Query("Select p from Product as p join p.category")
-	public List<Product> getListProduct(); 
+	@Query("SELECT p FROM Product as p"
+			+ "	JOIN p.category as c"
+			+ "	WHERE c.categoryName = :categoryName")
+	List<Product> findListProductByCategoryName (@Param("categoryName") String categoryName); 
 	
-	@Query("Select p from Product as p"
-			+ " Join p.category as c"
-			+ " where c.categoryName = :categoryName")
-	List<Product> findListProductByCategoryName(@Param("categoryName") String categoryName);
-	
-//	@Query("Select p from Product as p"
-//			+ " Join p.productType as pt"
-//			+ " where pt.productTypeName = :productTypeName")
-//	List<Product> findListProductByProductType(@Param("productTypeName") String productTypeName); 
+	@Query(value = "SELECT product.id, product.product_name FROM product", nativeQuery = true)
+	List<Product> findListProductByProductTypeName(); 
 }

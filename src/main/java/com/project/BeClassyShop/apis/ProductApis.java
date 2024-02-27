@@ -29,21 +29,6 @@ public class ProductApis {
 	@Autowired
 	private ProductService productService;
 
-	@GetMapping("products/category/{theCategoryName}")
-	public List<Product> getProductsByCategory(@PathVariable(name = "theCategoryName") String theCategoryName) {
-		List<Product> products = this.productService.getProductsByCategoryName(theCategoryName);
-		return products;
-	}
-
-//	@GetMapping(path = "/products")
-//	public Page<Product> getListProuct (@RequestParam(name = "page", required = false, defaultValue = "1") String _page,
-//			@RequestParam(name = "limit", required = false, defaultValue = "2") String _limit) {
-//		int page = Integer.parseInt(_page);
-//		int limit = Integer.parseInt(_limit);	
-//		
-//		return productService.getListProduct(page, limit); 
-//	}
-
 	@GetMapping(path = "/products")
 	public CustomePage<Product> getListProuct(
 			@RequestParam(name = "page", required = false, defaultValue = "1") String _page,
@@ -58,6 +43,17 @@ public class ProductApis {
 		Product product = productService.getProductById(productId);
 		return product;
 	}
+
+	@GetMapping(path = "/products/category")
+	public List<Product> getProductsByProductTypeName() {
+		return this.productService.getProductsByProductTypeName();
+	}
+
+//	@GetMapping(path = "/products/category/{categoryName}")
+//	public List<Product> getProductsByProductTypeName(
+//			@PathVariable(name = "categoryName") String theCategoryName) {
+//		return this.productService.getProductByCategoryName(theCategoryName); 
+//	}
 
 	@PostMapping(path = "/products")
 	public Product addProduct(@RequestBody Product theProduct) {

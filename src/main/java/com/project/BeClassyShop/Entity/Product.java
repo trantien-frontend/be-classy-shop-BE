@@ -3,7 +3,6 @@ package com.project.BeClassyShop.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -45,7 +44,7 @@ public class Product {
 	private String productImage;
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
-			CascadeType.MERGE }, fetch = FetchType.EAGER)
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	private Category category;
 
@@ -54,8 +53,8 @@ public class Product {
 	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_size"))
 	@JsonProperty("listSize")
 	private List<Size> listSizeProduct = new ArrayList<>();
-	
-	@ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
-	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns =  @JoinColumn(name = "id_color"))
-	private List<Color> listColor = new ArrayList<>(); 	
+
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
+	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_color"))
+	private List<Color> listColor = new ArrayList<>();
 }
