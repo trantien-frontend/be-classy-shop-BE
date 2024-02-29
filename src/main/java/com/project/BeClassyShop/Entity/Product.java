@@ -48,13 +48,19 @@ public class Product {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
 			CascadeType.MERGE }, fetch = FetchType.EAGER)
+	private ProductType productType;
+
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_size"))
-	@JsonProperty("listSize")
+	@JsonProperty("Sizes")
 	private List<Size> listSizeProduct = new ArrayList<>();
 
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
+			CascadeType.MERGE }, fetch = FetchType.LAZY)
 	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_color"))
+	@JsonProperty("Colors")
 	private List<Color> listColor = new ArrayList<>();
 }

@@ -8,8 +8,8 @@ import lombok.Data;
 
 @Data
 public class CustomePage<T> {
-	 private List<T> content;
-	 private CustomPageable pageable;
+	private List<T> content;
+	private CustomPageable pageable;
 
 	public CustomePage(Page<T> page) {
 		this.content = page.getContent();
@@ -20,7 +20,7 @@ public class CustomePage<T> {
 	@Data
 	private class CustomPageable {
 		private int pageNumber;
-		private int pageSize;
+		private int pageSize;	
 		private long totalElements;
 
 		public CustomPageable(int pageNumber, int pageSize, long totalElements) {
