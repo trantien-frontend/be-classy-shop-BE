@@ -32,7 +32,7 @@ public class Role {
 	@Column
 	private int id;
 	@Column(name = "role_name")
-	private String roleName;
+	private String roleName;	
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))

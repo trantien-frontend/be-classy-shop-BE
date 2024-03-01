@@ -25,4 +25,4 @@ public class CategoryApis {
 	public List<Category> getListCateogry() {
 		return categoryService.getListCategory();
 	}
-}
+}	

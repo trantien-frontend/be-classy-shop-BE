@@ -3,9 +3,18 @@ package com.project.BeClassyShop.Config;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.project.BeClassyShop.Service.UserService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 public class AppConfigure {
@@ -39,42 +48,35 @@ public class AppConfigure {
 //		return theUserDetailsManager; 
 //	}
 
-//	@Bean
-//	public PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
-//	
-//	@Bean
-//	public AuthenticationProvider authenticationProvider (UserService userService) {
-//		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-//		auth.setUserDetailsService(userService);
-//		auth.setPasswordEncoder(passwordEncoder());
-//		return auth; 
-//	}
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-//	@Bean
-//	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//		http.authorizeHttpRequests(configure -> configure
-//				.requestMatchers(HttpMethod.GET, "/api/banners").permitAll()
-//				);
-//
-//		// use HTTP Basic authentications
-//		http.httpBasic(Customizer.withDefaults());
-//
-//		// disable csrf
-//		http.csrf(csrf -> csrf.disable());
-//		http.cors(cors -> cors.disable()); 
-//
-//		return http.build();
-//	}
+	@Bean
+	public AuthenticationProvider authenticationProvider(UserService userService) {
+		DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
+		auth.setUserDetailsService(userService);
+		auth.setPasswordEncoder(passwordEncoder());
+		return auth;
+	}
 
-	/*
-	 * requestMatchers(HttpMethod.GET, "/api/products")
-	 * .permitAll().requestMatchers(HttpMethod.GET,
-	 * "/api/products/**").hasRole("EMPLOYEE") .requestMatchers(HttpMethod.POST,
-	 * "/api/products").hasRole("MANAGER") .requestMatchers(HttpMethod.PUT,
-	 * "/api/products").hasRole("MANAGER") .requestMatchers(HttpMethod.DELETE,
-	 * "/api/products/**").hasRole("ADMIN")
-	 */
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.exceptionHandling(handling -> handling.authenticationEntryPoint((req, res, ex) -> {
+			res.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+		}));
+
+		http.authorizeHttpRequests(configure -> configure.requestMatchers(HttpMethod.GET, "/api/banners").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/products").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/products/category/{categoryName}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/products/productType/{productTypeName}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/auth").hasRole("EMPLOYEE").anyRequest().authenticated()
+		);
+		// use HTTP Basic authentications
+		http.httpBasic(Customizer.withDefaults());
+		http.csrf(csrf -> csrf.disable());
+		return http.build();
+	}
 }
