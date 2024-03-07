@@ -1,4 +1,4 @@
-package com.project.BeClassyShop.Repository;
+package com.project.BeClassyShop.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.project.BeClassyShop.Entity.Product;
+import com.project.BeClassyShop.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 

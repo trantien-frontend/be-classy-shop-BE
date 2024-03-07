@@ -1,8 +1,8 @@
-package com.project.BeClassyShop.Repository;
+package com.project.BeClassyShop.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.project.BeClassyShop.Entity.Banner;
+import com.project.BeClassyShop.entity.Banner;
 
 public interface BannerRepository extends JpaRepository<Banner, Integer> {
 

@@ -1,12 +1,12 @@
-package com.project.BeClassyShop.Service;
+package com.project.BeClassyShop.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.BeClassyShop.Entity.Banner;
-import com.project.BeClassyShop.Repository.BannerRepository;
+import com.project.BeClassyShop.entity.Banner;
+import com.project.BeClassyShop.repository.BannerRepository;
 
 import lombok.AllArgsConstructor;
 

@@ -1,6 +1,8 @@
-package com.project.BeClassyShop.Entity;
+package com.project.BeClassyShop.entity;
 
 import java.util.Collection;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -33,9 +35,15 @@ public class Role {
 	private int id;
 	@Column(name = "role_name")
 	private String roleName;	
+	
+	public Role (String theRoleName) {
+		this.roleName = theRoleName; 
+	}
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	@ToString.Exclude
+	@JsonIgnore
 	private Collection<User> users;
 }
+

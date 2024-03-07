@@ -1,4 +1,4 @@
-package com.project.BeClassyShop.Entity;
+package com.project.BeClassyShop.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class CustomeUserDetail implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return user.getUserName();
+		return user.getEmail();
 	}
 
 	@Override

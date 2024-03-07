@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDTO {
-	private int id; 
-	private String categoryName; 
-};
+public class SignupReponse {
+	private UserDTO User; 
+	private String message; 
+	private String token; 
+}

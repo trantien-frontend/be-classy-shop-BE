@@ -1,4 +1,4 @@
-package com.project.BeClassyShop.DTO;
+package com.project.BeClassyShop.dto;
 
 public class ProducDTO {
 

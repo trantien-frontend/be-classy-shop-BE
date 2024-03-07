@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.BeClassyShop.DTO.CustomePage;
-import com.project.BeClassyShop.Entity.Product;
-import com.project.BeClassyShop.Service.ProductService;
+import com.project.BeClassyShop.dto.CustomePage;
+import com.project.BeClassyShop.entity.Product;
+import com.project.BeClassyShop.service.ProductService;
 
 import lombok.AllArgsConstructor;
 

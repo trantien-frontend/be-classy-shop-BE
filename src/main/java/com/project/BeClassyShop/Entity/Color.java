@@ -1,4 +1,4 @@
-package com.project.BeClassyShop.Entity;
+package com.project.BeClassyShop.entity;
 
 import java.util.ArrayList;
 import java.util.List;

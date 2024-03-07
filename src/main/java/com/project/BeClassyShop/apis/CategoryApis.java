@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.BeClassyShop.Entity.Category;
-import com.project.BeClassyShop.Service.CategoryService;
+import com.project.BeClassyShop.entity.Category;
+import com.project.BeClassyShop.service.CategoryService;
 
 import lombok.AllArgsConstructor;
 

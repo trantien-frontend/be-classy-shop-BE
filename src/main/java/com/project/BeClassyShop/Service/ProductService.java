@@ -1,4 +1,4 @@
-package com.project.BeClassyShop.Service;
+package com.project.BeClassyShop.service;
 
 import java.util.Optional;
 
@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.project.BeClassyShop.DTO.CustomePage;
-import com.project.BeClassyShop.Entity.Product;
-import com.project.BeClassyShop.Repository.ProductRepository;
+import com.project.BeClassyShop.dto.CustomePage;
+import com.project.BeClassyShop.entity.Product;
+import com.project.BeClassyShop.repository.ProductRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -19,19 +19,6 @@ import lombok.AllArgsConstructor;
 public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
-
-	private Sort handleSortBy(String sortBy) {
-		String sortField = sortBy;
-		Sort.Direction sortDirection = Sort.Direction.ASC;
-
-		if (sortBy.contains(":")) {
-			String[] parts = sortBy.split(":");
-			sortField = parts[0];
-			sortDirection = parts.length > 1 && parts[1].equalsIgnoreCase("dsc") ? Sort.Direction.DESC
-					: Sort.Direction.ASC;
-		}
-		return Sort.by(sortDirection, sortField);
-	}
 
 	public CustomePage<Product> getListProduct(Integer thePage, Integer theLimit, String sortBy) {
 		Pageable pageable = PageRequest.of(thePage, theLimit);
@@ -83,5 +70,18 @@ public class ProductService {
 			throw new RuntimeException("Not found Id" + theId);
 		}
 		productRepository.delete(product);
+	}
+	
+	private Sort handleSortBy(String sortBy) {
+		String sortField = sortBy;
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+
+		if (sortBy.contains(":")) {
+			String[] parts = sortBy.split(":");
+			sortField = parts[0];
+			sortDirection = parts.length > 1 && parts[1].equalsIgnoreCase("dsc") ? Sort.Direction.DESC
+					: Sort.Direction.ASC;
+		}
+		return Sort.by(sortDirection, sortField);
 	}
 }
