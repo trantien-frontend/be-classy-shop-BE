@@ -15,9 +15,11 @@ import com.project.BeClassyShop.entity.CustomeUserDetail;
 import com.project.BeClassyShop.entity.User;
 import com.project.BeClassyShop.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 	@Autowired
@@ -26,7 +28,7 @@ public class UserService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String theUserEmail) throws UsernameNotFoundException {
 		User user = userRepository.findByEmail(theUserEmail).get();
-
+	
 		if (user == null) {
 			throw new UsernameNotFoundException(theUserEmail);
 		}

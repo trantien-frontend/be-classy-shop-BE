@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = { "/api" })
+@RequestMapping(path = "/api/v1")
 public class CategoryApis {
 	@Autowired
 	private CategoryService categoryService;

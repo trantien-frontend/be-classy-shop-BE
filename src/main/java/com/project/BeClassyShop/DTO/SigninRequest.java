@@ -1,9 +1,13 @@
 package com.project.BeClassyShop.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class SigninRequest {
-	private String userName;
+	private String email;
 	private String password;
 }

@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 @CrossOrigin("*")
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/v1")
 public class BannerApi {
 	@Autowired
 	private BannerService bannerService;

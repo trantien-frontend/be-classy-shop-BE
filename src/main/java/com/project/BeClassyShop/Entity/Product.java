@@ -1,7 +1,6 @@
 package com.project.BeClassyShop.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,8 +26,8 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @ToString
+@Entity
 @Table(name = "product")
 public class Product {
 	@Id
@@ -54,13 +53,14 @@ public class Product {
 
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
 			CascadeType.MERGE }, fetch = FetchType.LAZY)
-	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_size"))
-	@JsonProperty("Sizes")
-	private List<Size> listSizeProduct = new ArrayList<>();
+	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "color_id"))
+	@JsonProperty("Colors")
+	private Set<Color> listColorProduct;
 
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
 			CascadeType.MERGE }, fetch = FetchType.LAZY)
-	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "id_product"), inverseJoinColumns = @JoinColumn(name = "id_color"))
-	@JsonProperty("Colors")
-	private List<Color> listColor = new ArrayList<>();
+	@JoinTable(name = "product_size_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = {
+			@JoinColumn(name = "size_id") })
+	@JsonProperty("Sizes")
+	private Set<Size> listSizeProduct;
 }

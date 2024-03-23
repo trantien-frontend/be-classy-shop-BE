@@ -17,20 +17,23 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-	private final String JWT_SECRET = "CxGUh8cRQ4yfOukWr3UVFDY/z9EVDBzOp1FHmZlTtoY=";
+
+	private final String JWT_SECRET = "/X2OTSXepNTZ8+ix4Wmb7VMo9FnGzcMDoGWuNyO4BciaNfCM1om80JimyTMlo8w1"; 
 
 	public String generateToken(UserDetails userDetails) {
-		return Jwts.builder().setSubject(userDetails.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-				.signWith(getSignedKey(), SignatureAlgorithm.HS256).compact();
+		return Jwts.builder()
+				.setSubject(userDetails.getUsername()) // Set Subject = userName
+				.setIssuedAt(new Date(System.currentTimeMillis())) // token bắt đầu có hiệu lực
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // thời gian token hết hạn
+				.signWith(getSignedKey(), SignatureAlgorithm.HS256).compact(); // ký token với JWT_SECRET và HS2
 	}
 
-	public String generateRefreshToken(Map<String, Object> extractClaims, UserDetails userDetails) {
-		return Jwts.builder().setClaims(extractClaims).setSubject(userDetails.getUsername())
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 604800000))
-				.signWith(getSignedKey(), SignatureAlgorithm.HS256).compact();
-	}
+//	public String generateRefreshToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+//		return Jwts.builder().setClaims(extractClaims).setSubject(userDetails.getUsername())
+//				.setIssuedAt(new Date(System.currentTimeMillis()))
+//				.setExpiration(new Date(System.currentTimeMillis() + 604800000))
+//				.signWith(getSignedKey(), SignatureAlgorithm.HS256).compact();
+//	}
 
 	private Key getSignedKey() {
 		byte[] key = Decoders.BASE64.decode(JWT_SECRET);
@@ -38,7 +41,9 @@ public class JwtService {
 	}
 
 	public String extractUserName(String token) {
-		return extractClaims(token, Claims::getSubject);
+		var result = extractClaims(token, Claims::getSubject); //Claims trích ra token đã ký
+		System.out.println("extraClasim: " + result);
+		return result; 
 	}
 
 	private <T> T extractClaims(String token, Function<Claims, T> claimsResolvers) {

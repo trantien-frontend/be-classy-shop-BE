@@ -1,21 +1,25 @@
 package com.project.BeClassyShop.service.impl;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.project.BeClassyShop.dto.JwtAuthenticationResponse;
-import com.project.BeClassyShop.dto.SignupRequest;
+import com.project.BeClassyShop.dto.ApiResponse;
 import com.project.BeClassyShop.dto.SigninRequest;
-import com.project.BeClassyShop.dto.SignupReponse;
+import com.project.BeClassyShop.dto.SignupRequest;
 import com.project.BeClassyShop.dto.UserDTO;
 import com.project.BeClassyShop.entity.CustomeUserDetail;
 import com.project.BeClassyShop.entity.Role;
 import com.project.BeClassyShop.entity.User;
+import com.project.BeClassyShop.exception.AppException;
+import com.project.BeClassyShop.exception.ErrorCode;
 import com.project.BeClassyShop.repository.RoleReponsitory;
 import com.project.BeClassyShop.repository.UserRepository;
 import com.project.BeClassyShop.service.AuthenticationService;
@@ -28,18 +32,23 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
 	private final UserRepository userRepository;
+
 	private final PasswordEncoder passwordEncoder;
+
 	private final RoleReponsitory roleReponsitory;
+
 	private final AuthenticationManager authenticationManager;
+
 	private final JwtService jwtService;
+
 	private final ModelMapper mapper;
-	
-	public User createUser (SignupRequest signupRequest) {
-		User user = new User(); 
+
+	public User createUser(SignupRequest signupRequest) {
 		if (userRepository.existsByEmail(signupRequest.getEmail())) {
-			throw new RuntimeException("User đã tồn tại");
+			throw new AppException(ErrorCode.USER_EXISTED);
 		}
-		
+
+		User user = new User();
 		user.setFirstName(signupRequest.getFirstName());
 		user.setLastName(signupRequest.getLastName());
 		user.setEmail(signupRequest.getEmail());
@@ -48,35 +57,48 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		user.setActive(1);
 		Role role = roleReponsitory.findByRoleName("ROLE_USER");
 		user.addRole(role);
-		return user; 
+		return user;
 	}
 
-	public SignupReponse signUp(SignupRequest signUpRequest) {
+	public ApiResponse<UserDTO> signUp(SignupRequest signUpRequest) {
 		User userResult = userRepository.save(createUser(signUpRequest));
 		UserDTO userDTO = mapper.map(userResult, UserDTO.class);
-		var jwt = jwtService.generateToken(new CustomeUserDetail(userResult));
-		SignupReponse signupReponse = new SignupReponse(); 
-		signupReponse.setUser(userDTO);
-		signupReponse.setMessage("Đăng ký thành công");
-		signupReponse.setToken(jwt);	
-		
-		return signupReponse; 
+		ApiResponse<UserDTO> result = new ApiResponse<>();
+		result.setStatusCode(200);
+		result.setBody(userDTO);
+		return result;
 	}
 
-	public JwtAuthenticationResponse jwtAuthenticationResponse(SigninRequest signinRequest) {
-		authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(signinRequest.getUserName(), signinRequest.getPassword()));
+	public ApiResponse<Object> jwtAuthenticationResponse(SigninRequest signinRequest) {
+		Optional<User> user = userRepository.findByEmail(signinRequest.getEmail());
+		
+		if (user.isEmpty()) {
+			throw new AppException(ErrorCode.INVALID_EMAIL);
+		}
 
-		var user = userRepository.findByEmail(signinRequest.getUserName())
-				.orElseThrow(() -> new IllegalArgumentException("Invalid User Name"));
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(signinRequest.getEmail(), signinRequest.getPassword()));
+		} catch (BadCredentialsException exception) {
+			throw new AppException(ErrorCode.INVALID_PASSWORD);
+		}
+		
+	
 
-		var jwt = jwtService.generateToken(new CustomeUserDetail(user));
-		var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), new CustomeUserDetail(user));
+		UserDTO userDTO = mapper.map(user, UserDTO.class);
+		var jwt = jwtService.generateToken(new CustomeUserDetail(user.get()));
+//		var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), new CustomeUserDetail(user.get()));
 
-		JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-		jwtResponse.setToken(jwt);
-		jwtResponse.setRefreshToken(refreshToken);
+		ApiResponse<Object> apiResponse = new ApiResponse<>();
+		Map<String, Object> map = new HashMap<>();
 
-		return jwtResponse;
+		map.put("token", jwt);
+		map.put("user", userDTO);
+
+		apiResponse.setBody(map);
+		apiResponse.setStatusCode(200);
+//		jwtResponse.setRefreshToken(refreshToken);
+
+		return apiResponse;
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,6 +52,9 @@ public class AppConfigure {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final UserService userService;
+	
+	private final String[] PUBLIC_ENDPOINTS = { "/api/v1/banners", "/api/v1/products/**", "/api/v1/categories/**",
+			"/api/v1/stores/**", "/api/v1/auth/signup", "/api/v1/auth/signin" };
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,17 +63,15 @@ public class AppConfigure {
 		}));
 		// use HTTP Basic authentications
 		http.httpBasic(Customizer.withDefaults());
-		http.csrf(csrf -> csrf.disable());
+		http.csrf(AbstractHttpConfigurer::disable); 
+		http.cors(AbstractHttpConfigurer::disable);
 
 		http.authorizeHttpRequests(configure -> configure
-				.requestMatchers(HttpMethod.GET, "/api/banners").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/v1/auth/signup").permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/v1/auth/signin").permitAll()
+				.requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
 				.anyRequest().authenticated());
 
 		http.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		
 		http.authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter,
 				UsernamePasswordAuthenticationFilter.class);
 

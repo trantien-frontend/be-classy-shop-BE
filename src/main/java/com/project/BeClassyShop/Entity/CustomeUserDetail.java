@@ -10,10 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class CustomeUserDetail implements UserDetails {
 	User user;
@@ -21,13 +19,12 @@ public class CustomeUserDetail implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-
+		
 		Collection<Role> roles = user.getRoles();
-
 		roles.stream().forEach(role -> {
 			authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
 		});
-
+		
 		return authorities;
 	}
 

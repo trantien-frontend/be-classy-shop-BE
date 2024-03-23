@@ -1,5 +1,6 @@
 package com.project.BeClassyShop.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,14 @@ import lombok.AllArgsConstructor;
 public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
+	
+	public List<Product> getProducts() {
+		return productRepository.findAll(); 
+	}
 
 	public CustomePage<Product> getListProduct(Integer thePage, Integer theLimit, String sortBy) {
-		Pageable pageable = PageRequest.of(thePage, theLimit);
+		Pageable pageable = PageRequest.of(thePage,theLimit);
+	
 		if (sortBy != null && !sortBy.isEmpty()) {
 			Sort sort = handleSortBy(sortBy);
 			pageable = PageRequest.of(thePage, theLimit, sort);
@@ -31,7 +37,8 @@ public class ProductService {
 
 	public CustomePage<Product> getProductsByCategoryName(Integer thePage, Integer theLimit, String theCategoryName,
 			String sortBy) {
-		Pageable pageable = PageRequest.of(thePage, theLimit);
+		Pageable pageable = PageRequest.of(thePage, theLimit);  
+		System.out.println("sortBy: " + sortBy);
 
 		if (sortBy != null && !sortBy.isEmpty()) {
 			Sort sort = handleSortBy(sortBy);
@@ -48,6 +55,10 @@ public class ProductService {
 			pageable = PageRequest.of(thePage, theLimit, sort);
 		}
 		return new CustomePage<Product>(productRepository.findByProductTypeName(theProductTypeName, pageable));
+	}
+	
+	public List<Product> getProductsByProductTypeName(String theProductTypeName){
+		return productRepository.getListProductByProductType(theProductTypeName); 
 	}
 
 	public Product getProductById(Integer theId) {

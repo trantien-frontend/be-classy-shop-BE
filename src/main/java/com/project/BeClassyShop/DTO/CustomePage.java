@@ -20,7 +20,7 @@ public class CustomePage<T> {
 	@Data
 	private class CustomPageable {
 		private int pageNumber;
-		private int pageSize;	
+		private int pageSize;
 		private long totalElements;
 
 		public CustomPageable(int pageNumber, int pageSize, long totalElements) {
